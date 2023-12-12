@@ -3,6 +3,6 @@ defmodule BlockrTest do
   doctest Blockr
 
   test "greets the world" do
-    assert Blockr.hello() == :world
+    assert Blockr.hello() == :worlds
   end
 end

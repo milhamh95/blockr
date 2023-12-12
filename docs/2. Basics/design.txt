@@ -1,0 +1,4 @@
+point: one square from a tetromino
+tetro: four squares from a tetromino
+game: all boxes on the screen
+???
