@@ -1,0 +1,150 @@
+# Elixir first module
+
+## Livebook is great for coders
+
+```elixir
+import IEx.Helpers
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+IEx.Helpers
+```
+
+### Create some Elixir code
+
+Simply click on the Elixir cell icon to build a new cell then write some code
+
+```elixir
+4 + 38
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+42
+```
+
+```elixir
+defmodule Conversions.Metric do
+  def cents_to_inches(cents \\ pi()) do
+    cents * 2.54
+  end
+
+  defp pi do
+    3.1415
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, Conversions.Metric, <<70, 79, 82, 49, 0, 0, 7, ...>>, {:pi, 0}}
+```
+
+```elixir
+i(Conversions.Metric)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Term
+  Conversions.Metric
+Data type
+  Atom
+Module bytecode
+  []
+Source
+  #cell:gq4oqlq6exmutsspbjryalmq4mdrf4tw
+Version
+  [198863129467447789547019270714092649129]
+Compile options
+  [:no_spawn_compiler_process, :from_core, :no_core_prepare, :no_auto_import]
+Description
+  Call Conversions.Metric.module_info() to access metadata.
+Raw representation
+  :"Elixir.Conversions.Metric"
+Reference modules
+  Module, Atom
+Implemented protocols
+  IEx.Info, Inspect, List.Chars, String.Chars
+```
+
+```elixir
+Conversions.Metric.cents_to_inches()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+7.979410000000001
+```
+
+```elixir
+Conversions.Metric.cents_to_inches(2)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+5.08
+```
+
+```elixir
+exports(Conversions.Metric)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+cents_to_inches/0     cents_to_inches/1     
+```
+
+```elixir
+# the name will become `Metric`.
+# name after the last period become alias
+# the last namespace is Metric 
+alias Conversions.Metric
+
+# alias Conversions.Metric, as: Metric
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Conversions.Metric
+```
+
+```elixir
+Metric.cents_to_inches()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+7.979410000000001
+```
+
+```elixir
+# decide not to type at all
+import Conversions.Metric
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Conversions.Metric
+```
+
+```elixir
+cents_to_inches()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+7.979410000000001
+```

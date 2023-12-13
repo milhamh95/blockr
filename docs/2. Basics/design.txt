@@ -1,4 +1,16 @@
 point: one square from a tetromino
+    {row, column}
+    function: move_down(point) ...a point moved down by one
 tetro: four squares from a tetromino
 game: all boxes on the screen
 ???
+
+x <- row 1, column 1 {row, col}, {1, 1}
+x <- row 2, column 1 {row, col}, {2, 1}
+x <- row 3, column 1 {row, col}, {3, 1}
+x <- row 4, column 1 {row, col}, {4, 1}
+
+point: {1,2}
+move down (when gravity clicks): {2, 2}
+move down (when gravity clicks): {3, 2}
+move down (when gravity clicks): {4, 2}
