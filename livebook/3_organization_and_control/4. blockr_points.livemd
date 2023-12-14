@@ -1,0 +1,51 @@
+# Blockr Points
+
+## one-point
+
+```elixir
+p =
+  Point.new(1, 5)
+  |> Point.move_down()
+  |> Point.move_down()
+  |> Point.move_down()
+  |> Point.move_left()
+  |> Point.move_right()
+
+Canvas.new(p)
+```
+
+## Multiple Point
+
+```elixir
+points =
+  [
+    Point.new(2, 5),
+    Point.new(2, 6),
+    Point.new(3, 4),
+    Point.new(3, 5)
+  ]
+
+Canvas.new(points)
+```
+
+```elixir
+# points = 
+#   [
+#     (Point.new(2,5)|> Point.move_right()),
+#     (Point.new(2,6)|> Point.move_right()),
+#     (Point.new(3,4)|> Point.move_right()),
+#     (Point.new(3,5)|> Point.move_right()),
+#   ]
+
+# points_data = [{2, 5}, {2, 6}, {3, 4}, {3, 5}]
+
+# points = Enum.map(points_data, fn {x, y} ->
+#   Point.new(x, y) |> Point.move_right()
+# end)
+
+points =
+  [{2, 5}, {2, 6}, {3, 4}, {3, 5}]
+  |> Enum.map(fn {x, y} -> Point.new(x, y) |> Point.move_right() end)
+
+Canvas.new(points)
+```

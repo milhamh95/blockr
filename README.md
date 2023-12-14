@@ -26,3 +26,19 @@ iex -S mix
 
 recompile -> to recompile app
 ```
+
+# 3. Organization and control
+
+## c. Blockr Project LiveBook
+- connect code with livebook
+- run
+
+```
+iex --sname batman --cookie batcookie -S mix
+```
+
+- open liveview
+- open `Runtime settings`, click disconnect
+- then click connect
+- choose `Attached Node`
+- input the username and password

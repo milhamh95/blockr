@@ -1,7 +1,7 @@
 defmodule Point do
 
   def new(row, col) do
-    # new point in a tuple
+    {row, col}
   end
 
   def move_down({row, col}) do

@@ -13,4 +13,8 @@ defmodule PointTest do
     assert Point.move_right({5,6}) == {5, 7}
   end
 
+  test "New Point" do
+    assert Point.new(1,1) == {1,1}
+  end
+
 end
