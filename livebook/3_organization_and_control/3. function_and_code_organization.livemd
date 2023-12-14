@@ -1,0 +1,95 @@
+# Function and Code Organization
+
+## Section
+
+```elixir
+defmodule Point do
+  def right({x, y}), do: {x + 1, y}
+  def left({x, y}), do: {x - 1, y}
+  def up({x, y}), do: {x, y - 1}
+  def down({x, y}), do: {x, y + 1}
+  def mirror({x, y}, w), do: {w - x, y}
+  def flip({x, y}, h), do: {x, h - y}
+  def transpose({x, y}), do: {y, x}
+  def move({x, y}, {cx, cy}), do: {x + cx, y + cy}
+
+  def rotate(point, 0, _w, _h) do
+    point
+  end
+
+  def rotate(point, 90, w, _h) do
+    point
+    |> transpose
+    |> mirror(w)
+  end
+
+  def rotate(point, 180, w, h) do
+    point
+    |> flip(h)
+    |> mirror(w)
+  end
+
+  def rotate(point, 270, _w, h) do
+    point
+    |> flip(h)
+    |> transpose
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, Point, <<70, 79, 82, 49, 0, 0, 12, ...>>, {:rotate, 4}}
+```
+
+```elixir
+import Point
+
+origin = {0, 0}
+
+origin
+|> right
+|> right
+|> down
+
+point2 = {1, 3}
+IO.inspect(Point.mirror(point2, 5))
+IO.inspect(Point.flip(point2, 5))
+IO.inspect(Point.transpose(point2))
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{4, 3}
+{1, 2}
+{3, 1}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{3, 1}
+```
+
+```elixir
+point3 = {0, 0}
+IO.inspect(point3 |> rotate(270, 5, 4))
+IO.inspect(point3 |> rotate(180, 5, 4))
+IO.inspect(point3 |> rotate(90, 5, 4))
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{4, 0}
+{5, 4}
+{5, 0}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{5, 0}
+```

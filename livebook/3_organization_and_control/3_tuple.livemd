@@ -1,0 +1,62 @@
+# 3. Tuple
+
+## Tuples, Desconstruction, and Pattern Matching
+
+* Tuples: list of things with a fixed size
+* Position of an elements in a tuple determines its meaning
+
+```elixir
+place = {:stockholm, :sweden}
+IO.inspect(place)
+origin = {0, 0}
+IO.inspect(origin)
+white = {Oxff, Oxff, Oxff}
+IO.inspect(white)
+success = {:ok, "result"}
+IO.inspect(success)
+failure = {:error, 401}
+IO.inspect(failure)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:stockholm, :sweden}
+{0, 0}
+{Oxff, Oxff, Oxff}
+{:ok, "result"}
+{:error, 401}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:error, 401}
+```
+
+## Pattern Matching
+
+```elixir
+place = {:stockholm, :sweden}
+{city, state} = place
+IO.inspect(city)
+IO.inspect(state)
+
+IO.inspect(elem(place, 0))
+IO.inspect(elem(place, 1))
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:stockholm
+:sweden
+:stockholm
+:sweden
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:sweden
+```
