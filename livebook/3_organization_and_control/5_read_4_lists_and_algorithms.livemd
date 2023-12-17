@@ -1,0 +1,504 @@
+# 5. Read 4: Lists and Algorithms
+
+## Lists
+
+```elixir
+[1, 2, 3]
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[1, 2, 3]
+```
+
+## List construction
+
+```elixir
+list1 = []
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[]
+```
+
+```elixir
+list2 = [3 | list1]
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[3]
+```
+
+```elixir
+list3 = [2 | list2]
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[2, 3]
+```
+
+```elixir
+list4 = [1 | list3]
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[1, 2, 3]
+```
+
+```elixir
+append = fn lst, item -> [item | lst] end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+#Function<41.105768164/2 in :erl_eval.expr/6>
+```
+
+```elixir
+[] |> append.(3) |> append.(2) |> append.(1)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[1, 2, 3]
+```
+
+## The Enumerable Abstraction
+
+```elixir
+Enum.map([1, 2, 3], fn x -> x * 2 end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[2, 4, 6]
+```
+
+```elixir
+Enum.map(1..3, fn x -> x * 2 end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[2, 4, 6]
+```
+
+```elixir
+Enum.sum([1, 2, 3])
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+6
+```
+
+```elixir
+Enum.map(1..3, fn x -> x * 2 end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[2, 4, 6]
+```
+
+## Pattern Matching and Lists
+
+```elixir
+list = [1, 2, 3]
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[1, 2, 3]
+```
+
+```elixir
+[head | tail] = [1, 2, 3]
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[1, 2, 3]
+```
+
+```elixir
+head
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1
+```
+
+```elixir
+tail
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[2, 3]
+```
+
+```elixir
+[] = [1, 2, 3]
+```
+
+```elixir
+[first, second | rest] = list
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[1, 2, 3]
+```
+
+```elixir
+second
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+2
+```
+
+```elixir
+[first, second, third] = list
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[1, 2, 3]
+```
+
+## Advanced Pattern
+
+```elixir
+list = [1, 2, 3]
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[1, 2, 3]
+```
+
+```elixir
+[_, second, third | rest] = list
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[1, 2, 3]
+```
+
+```elixir
+second
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+2
+```
+
+```elixir
+third
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+3
+```
+
+```elixir
+rest
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[]
+```
+
+```elixir
+[1 | [_ | rest]] = list
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[1, 2, 3]
+```
+
+```elixir
+rest
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[3]
+```
+
+## Recursion Over Lists
+
+## Simplest Recursive Algorithms
+
+```elixir
+defmodule Calculation do
+  def total([]), do: 0
+  def total([head | tail]), do: head + total(tail)
+
+  def total_with_accumulator([], partial_total) do
+    partial_total
+  end
+
+  def total_with_accumulator([first | rest], partial_total) do
+    total_with_accumulator(rest, partial_total + first)
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, Calculation, <<70, 79, 82, 49, 0, 0, 7, ...>>, {:total_with_accumulator, 2}}
+```
+
+```elixir
+import Calculation
+
+IO.inspect(Calculation.total([1, 2, 3]))
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+6
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+6
+```
+
+## Tail Recursion With Accumulators
+
+```elixir
+total_with_accumulator([1, 2, 3], 0)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+6
+```
+
+## Reduce and Anonymous Function
+
+```elixir
+add = fn x, y -> x + y end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+#Function<41.105768164/2 in :erl_eval.expr/6>
+```
+
+```elixir
+add.(3, 4)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+7
+```
+
+```elixir
+inc = fn x -> add.(x, 1) end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+#Function<42.105768164/1 in :erl_eval.expr/6>
+```
+
+```elixir
+inc.(4)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+5
+```
+
+```elixir
+4 |> inc.() |> inc.()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+6
+```
+
+## Higher Order Function
+
+```elixir
+add = fn list_item, acc -> list_item + acc end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+#Function<41.105768164/2 in :erl_eval.expr/6>
+```
+
+```elixir
+Enum.reduce(list, 0, add)
+
+# same with 
+# 0
+# |> add.(1)
+# |> add.(2)
+# |> add.(3)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+6
+```
+
+## Implement a Polygon
+
+```elixir
+defmodule Point do
+  def origin, do: {0, 0}
+  def right({x, y}), do: {x + 1, y}
+  def left({x, y}), do: {x - 1, y}
+  def up({x, y}), do: {x, y - 1}
+  def down({x, y}), do: {x, y + 1}
+  def mirror({x, y}, w), do: {w - x, y}
+  def flip({x, y}, h), do: {x, h - y}
+  def transpose({x, y}), do: {y, x}
+  def move({x, y}, {cx, cy}), do: {x + cx, y + cy}
+
+  def rotate(point, 0, _w, _h) do
+    point
+  end
+
+  def rotate(point, 90, w, _h) do
+    point
+    |> transpose
+    |> mirror(w)
+  end
+
+  def rotate(point, 180, w, h) do
+    point
+    |> flip(h)
+    |> mirror(w)
+  end
+
+  def rotate(point, 270, _w, h) do
+    point
+    |> flip(h)
+    |> transpose
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, Point, <<70, 79, 82, 49, 0, 0, 12, ...>>, {:rotate, 4}}
+```
+
+```elixir
+import Point
+
+defmodule Polygon do
+  def rectangle({x, y}, height, width) do
+    [
+      {x, y},
+      {x + width, y},
+      {x + width, y + height},
+      {x, y + height}
+    ]
+  end
+
+  def square(point, length) do
+    rectangle(point, length, length)
+  end
+
+  # def mirror(polygon, w) do
+  #   Enum.map(polygon, fn point -> Point.mirror(point, w) end)
+  # end
+  def mirror(polygon, w), do: Enum.map(polygon, &Point.mirror(&1, w))
+  def flip(polygon, h), do: Enum.map(polygon, &Point.flip(&1, h))
+  def transpose(polygon), do: Enum.map(polygon, &Point.transpose/1)
+
+  def rotate(polygon, degrees, w, h) do
+    Enum.map(polygon, &Point.rotate(&1, degrees, w, h))
+  end
+
+  def move(polygon, vector) do
+    Enum.map(polygon, &Point.move(&1, vector))
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, Polygon, <<70, 79, 82, 49, 0, 0, 12, ...>>, {:move, 2}}
+```
+
+```elixir
+r = Polygon.rectangle(Point.origin(), 4, 2)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[{0, 0}, {2, 0}, {2, 4}, {0, 4}]
+```
+
+```elixir
+r |> Polygon.rotate(270, 2, 4)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[{4, 0}, {4, 2}, {0, 2}, {0, 0}]
+```
