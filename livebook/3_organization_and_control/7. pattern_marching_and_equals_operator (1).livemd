@@ -1,0 +1,153 @@
+# Pattern Marching and Equals Operator
+
+```elixir
+import IEx.Helpers
+```
+
+## The = (match) operator
+
+```elixir
+a = 42
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+42
+```
+
+```elixir
+a
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+42
+```
+
+```elixir
+a = 42
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+42
+```
+
+### The pin operator
+
+```elixir
+^a = 42
+
+# ^ = pin operator, to match a value
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+42
+```
+
+### Matching Tuples
+
+```elixir
+place = {:austin, :tx}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:austin, :tx}
+```
+
+```elixir
+place
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:austin, :tx}
+```
+
+```elixir
+# {city, state} = {:austin, :texas}
+{city, state} = place
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:austin, :tx}
+```
+
+```elixir
+"#{city}, #{state}"
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"austin, tx"
+```
+
+```elixir
+{city, :tn} = place
+```
+
+```elixir
+{city, state, country} = place
+```
+
+### Matching List
+
+```elixir
+three = [1, 2, 3]
+four = [4, 5, 6, 7]
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[4, 5, 6, 7]
+```
+
+```elixir
+[first, second] = three
+```
+
+```elixir
+defmodule MyList do
+  def first_and_second([first, second | list]) do
+    "#{first} #{second} #{inspect(list)}"
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, MyList, <<70, 79, 82, 49, 0, 0, 7, ...>>, {:first_and_second, 1}}
+```
+
+```elixir
+MyList.first_and_second(three)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"1 2 [3]"
+```
+
+```elixir
+MyList.first_and_second(four)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"4 5 [6, 7]"
+```
