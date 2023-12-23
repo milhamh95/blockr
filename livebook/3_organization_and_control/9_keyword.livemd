@@ -1,0 +1,156 @@
+# Keywords, functions, tuples
+
+```elixir
+import IEx.Helpers
+```
+
+## Keywords
+
+```elixir
+list = [{"one", 1}, {"two", 2}]
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[{"one", 1}, {"two", 2}]
+```
+
+```elixir
+list = [{:one, 1}, {:two, 2}]
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[one: 1, two: 2]
+```
+
+```elixir
+# keyword data
+# looks like a map
+[one: 1, two: 2]
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[one: 1, two: 2]
+```
+
+## Tuple
+
+```elixir
+{:arg1, :arg2, :options} |> Tuple.to_list() |> Enum.count()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+3
+```
+
+```elixir
+# {:arg1, :arg2, [{:fast, true}, {:cheap, true}]}
+# {:arg1, :arg2, [fast: true, cheap: true]}
+
+# fast: true, cheap: true -> keyword
+# we can omit the bracket if the last item is keyword
+
+{:arg1, :arg2, fast: true, cheap: true}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:arg1, :arg2, [fast: true, cheap: true]}
+```
+
+```elixir
+{:arg1, :arg2, fast: true, cheap: true} |> Tuple.to_list() |> Enum.count()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+3
+```
+
+## Functions
+
+```elixir
+defmodule Args do
+  def whats_going_on(first, options) do
+    # inspected value is a keyword
+    "first: #{first}, options: #{inspect(options)}"
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, Args, <<70, 79, 82, 49, 0, 0, 7, ...>>, {:whats_going_on, 2}}
+```
+
+```elixir
+import Args
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Args
+```
+
+```elixir
+whats_going_on(:one, :two)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"first: one, options: :two"
+```
+
+```elixir
+whats_going_on(:one, [{:one, 1}, {:two, 2}])
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"first: one, options: [one: 1, two: 2]"
+```
+
+```elixir
+whats_going_on(:one, fast: true, cheap: true, reliable: true)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"first: one, options: [fast: true, cheap: true, reliable: true]"
+```
+
+```elixir
+exports(Args)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+whats_going_on/2     
+```
+
+```elixir
+kw = [one: 1, two: 2]
+# access behavior
+kw[:one]
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1
+```
