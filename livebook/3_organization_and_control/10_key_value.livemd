@@ -1,0 +1,788 @@
+# Key Value Data
+
+```elixir
+import IEx.Helpers
+import IEx.Info
+```
+
+## a. Keyword Dictionaries
+
+```elixir
+one = {:one, 1}
+two = {:two, 2}
+three = {:three, 3}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:three, 3}
+```
+
+```elixir
+numbers = [one, two, three]
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[one: 1, two: 2, three: 3]
+```
+
+```elixir
+# keywords lists -> lists of two tuples
+# represent key value pairs
+bigger = [four: 4, five: 5, six: 6]
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[four: 4, five: 5, six: 6]
+```
+
+```elixir
+[first | rest] = bigger
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[four: 4, five: 5, six: 6]
+```
+
+### Keywords as Options
+
+```elixir
+# def optional(required, opt) do
+#   one = Keyword.get(opt, :option1) || "default value"
+#   two = Keyword.get(opt, :option2) || "default value"
+#   do_something_with(required, one, two)
+# end
+
+# we can call the function with 
+# optional(:required, option1: "first option", option2: "second option")
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+nil
+```
+
+## b. Maps
+
+### Map Syntax, Sugar and Access
+
+```elixir
+numbers = [one: 1, two: 2, three: 3]
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[one: 1, two: 2, three: 3]
+```
+
+```elixir
+numbers_map = Map.new(numbers)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{one: 1, two: 2, three: 3}
+```
+
+```elixir
+names = %{1 => :one, 2 => :two}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{1 => :one, 2 => :two}
+```
+
+```elixir
+numbers_map.one
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1
+```
+
+```elixir
+names[1]
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:one
+```
+
+```elixir
+Map.get(names, 2)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:two
+```
+
+```elixir
+Map.get(names, 4)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+nil
+```
+
+```elixir
+Map.get(names, 4, 0)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+0
+```
+
+### Safe Access With Map.fetch
+
+<!-- livebook:{"break_markdown":true} -->
+
+###
+
+```elixir
+Map.fetch(names, 4)
+
+# in general, it's better to fail as soon and 
+# as hard as you can within application code
+# the worst behavior is code that silently does something wrong
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:error
+```
+
+```elixir
+numbers_map
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{one: 1, two: 2, three: 3}
+```
+
+```elixir
+%{one: value1, two: value2, three: value3} = numbers_map
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{one: 1, two: 2, three: 3}
+```
+
+```elixir
+value3
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+3
+```
+
+```elixir
+%{two: two} = numbers_map
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{one: 1, two: 2, three: 3}
+```
+
+```elixir
+two
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+2
+```
+
+```elixir
+%{} = numbers_map
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{one: 1, two: 2, three: 3}
+```
+
+You can user pattern matching to extract the values for a given key.
+
+But you can't extract the key for a value. Elixir maps are built to look up by keys efficiently
+
+## c. Map Manipulation
+
+In Elixir data structures can't really be updated. When we say "change' or "update", we're really talking about returning a new changed map.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Map Update Syntax
+
+```elixir
+person = %{first: "Joe", last: "Armstrong", profession: "Programmer"}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{first: "Joe", last: "Armstrong", profession: "Programmer"}
+```
+
+```elixir
+%{person | profession: "Author"}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{first: "Joe", last: "Armstrong", profession: "Author"}
+```
+
+### Map Transformation functions
+
+```elixir
+counts = %{} |> Map.put(:index, 1) |> Map.put(:elixir, 1)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{index: 1, elixir: 1}
+```
+
+```elixir
+inc = fn x -> x + 1 end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+#Function<42.105768164/1 in :erl_eval.expr/6>
+```
+
+```elixir
+%{}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{}
+```
+
+## d. Using Maps in Bulk
+
+```elixir
+defmodule Roman do
+  @moduledoc """
+  Documentation for `Roman`.
+  """
+  def next_digit({0, romans}), do: {0, romans}
+
+  def next_digit({decimal, romans}) do
+    result =
+      cond do
+        decimal >= 1000 ->
+          {decimal - 1000, ["m" | romans]}
+
+        decimal >= 900 ->
+          {decimal - 900, ["cm" | romans]}
+
+        decimal >= 500 ->
+          {decimal - 500, ["d" | romans]}
+
+        decimal >= 400 ->
+          {decimal - 400, ["cd" | romans]}
+
+        decimal >= 100 ->
+          {decimal - 100, ["c" | romans]}
+
+        decimal >= 90 ->
+          {decimal - 90, ["xc" | romans]}
+
+        decimal >= 50 ->
+          {decimal - 50, ["l" | romans]}
+
+        decimal >= 40 ->
+          {decimal - 40, ["xl" | romans]}
+
+        decimal >= 10 ->
+          {decimal - 10, ["x" | romans]}
+
+        decimal >= 9 ->
+          {decimal - 9, ["ix" | romans]}
+
+        decimal >= 5 ->
+          {decimal - 5, ["v" | romans]}
+
+        decimal >= 4 ->
+          {decimal - 4, ["iv" | romans]}
+
+        decimal >= 1 ->
+          {decimal - 1, ["i" | romans]}
+      end
+
+    next_digit(result)
+  end
+
+  def convert(decimal) when is_integer(decimal) and decimal > 0 do
+    {0, romans} = next_digit({decimal, []})
+
+    romans
+    |> Enum.reverse()
+    |> Enum.join("")
+    |> String.to_atom()
+  end
+
+  def map() do
+    for x <- 1..1000, into: %{} do
+      {convert(x), x}
+    end
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, Roman, <<70, 79, 82, 49, 0, 0, 15, ...>>, {:map, 0}}
+```
+
+```elixir
+import Roman
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Roman
+```
+
+```elixir
+Roman.next_digit({8, []})
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{0, ["i", "i", "i", "v"]}
+```
+
+```elixir
+Roman.next_digit({10, []})
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{0, ["x"]}
+```
+
+```elixir
+Roman.convert(3)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:iii
+```
+
+```elixir
+Roman.convert(64)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:lxiv
+```
+
+```elixir
+map = Roman.map()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{
+  cdxxvii: 427,
+  xlii: 42,
+  di: 501,
+  lxxxvii: 87,
+  cmlxii: 962,
+  cml: 950,
+  ccvi: 206,
+  dccl: 750,
+  dxix: 519,
+  cmlxiv: 964,
+  dccclxxv: 875,
+  dclxxvi: 676,
+  cxxvii: 127,
+  cclxxxvii: 287,
+  ccxxiv: 224,
+  cxxxvi: 136,
+  cci: 201,
+  viii: 8,
+  dcxli: 641,
+  dcccxliii: 843,
+  dxlvi: 546,
+  xciv: 94,
+  ccxxxvi: 236,
+  cmxxvii: 927,
+  dclxxviii: 678,
+  cdxviii: 418,
+  cclx: 260,
+  cdii: 402,
+  ccclvi: 356,
+  dxxxviii: 538,
+  iii: 3,
+  cdlxvi: 466,
+  cmxix: 919,
+  dccclxxxiv: 884,
+  cccli: 351,
+  dcxxxviii: 638,
+  cccxciii: 393,
+  dcccxlviii: 848,
+  xxxii: 32,
+  dcci: 701,
+  dlxxxi: 581,
+  cxlvii: 147,
+  dccv: 705,
+  cclxxxii: 282,
+  dclxxxii: 682,
+  cccxi: 311,
+  ccclxxxi: 381,
+  cmxcviii: 998,
+  cmlxxiii: 973,
+  cdxxix: 429,
+  ...
+}
+```
+
+```elixir
+map.iii
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+3
+```
+
+```elixir
+map.clv
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+155
+```
+
+## e. Structs Are Restricted Maps
+
+A struct is a specific kind of map.
+
+A map can have any combination of keys, every struct that conforms to a type has a specific list of keys
+
+<!-- livebook:{"break_markdown":true} -->
+
+### defstruct Defines a Struct
+
+```elixir
+defmodule Color do
+  def hex_code(:blue) do
+    "#0000FF"
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, Color, <<70, 79, 82, 49, 0, 0, 5, ...>>, {:hex_code, 1}}
+```
+
+```elixir
+import Color
+
+defmodule Shape do
+  @enforce_keys [:points]
+  defstruct([
+    :points,
+    stroke: :blue,
+    fill: :black
+  ])
+
+  def to_svg(shape) do
+    # """""" -> heredoc
+    """
+    <polygon
+      points="#{render_points(shape)}"
+      style="#{render_style(shape)}"
+    />
+    """
+  end
+
+  def render_points(shape) do
+    shape.points
+    |> Enum.map(fn {x, y} -> "#{x}, #{y}" end)
+    |> Enum.join(" ")
+  rescue
+    _exception ->
+      reraise "Invalid points: #{inspect(shape.points)}", __STACKTRACE__
+  end
+
+  def render_style(shape) do
+    fill = "fill:#{Color.hex_code(shape.fill)}"
+    stroke = "stroke:#{Color.hex_code(shape.stroke)};stroke-width:1"
+    "#{fill};#{stroke}"
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, Shape, <<70, 79, 82, 49, 0, 0, 20, ...>>, {:render_style, 1}}
+```
+
+```elixir
+import Shape
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Shape
+```
+
+```elixir
+Shape.__struct__()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%Shape{points: nil, stroke: :blue, fill: :black}
+```
+
+```elixir
+shape =
+  Shape.__struct__(
+    fill: :white,
+    stroke: :black,
+    points: [
+      Point.new(1, 2),
+      Point.new(2, 2),
+      Point.new(2, 1)
+    ]
+  )
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%Shape{points: [{1, 2}, {2, 2}, {2, 1}], stroke: :black, fill: :white}
+```
+
+```elixir
+shape.fill
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:white
+```
+
+```elixir
+%{points: [first, second, third]} = shape
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%Shape{points: [{1, 2}, {2, 2}, {2, 1}], stroke: :black, fill: :white}
+```
+
+```elixir
+first
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{1, 2}
+```
+
+```elixir
+%Shape{points: [{1, 2}, {2, 2}, {2, 1}], stroke: :black, fill: :white}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%Shape{points: [{1, 2}, {2, 2}, {2, 1}], stroke: :black, fill: :white}
+```
+
+```elixir
+Shape.__struct__()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%Shape{points: nil, stroke: :blue, fill: :black}
+```
+
+### Structs vs Maps
+
+```elixir
+Map.keys(shape)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[:__struct__, :points, :stroke, :fill]
+```
+
+```elixir
+shape.__struct__
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Shape
+```
+
+```elixir
+# convert from structs to maps by using Map.from_struct
+map = Map.from_struct(shape)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{points: [{1, 2}, {2, 2}, {2, 1}], stroke: :black, fill: :white}
+```
+
+```elixir
+# convert from structs to maps by dropping they key
+map = Map.drop(shape, [:__struct__])
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{points: [{1, 2}, {2, 2}, {2, 1}], stroke: :black, fill: :white}
+```
+
+```elixir
+# convert from a map to a struct
+Map.put(map, :__struct__, Shape)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%Shape{points: [{1, 2}, {2, 2}, {2, 1}], stroke: :black, fill: :white}
+```
+
+```elixir
+Map.get(shape, :fill)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:white
+```
+
+```elixir
+shape.fill
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:white
+```
+
+```elixir
+# can't use the access protocol
+shape[:fill]
+```
+
+```elixir
+# background key is not exist
+%{shape | background: :plaid}
+```
+
+```elixir
+# use Map.put to alter a struct will convert struct to map
+Map.put(shape, :background, :polka_dot)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{
+  __struct__: Shape,
+  points: [{1, 2}, {2, 2}, {2, 1}],
+  stroke: :black,
+  fill: :white,
+  background: :polka_dot
+}
+```
+
+## f. Structs, Maps, and Public APIs
+
+```elixir
+IO.puts(Shape.to_svg(%Shape{points: "1,2"}))
+```
+
+```elixir
+shape = %Shape{points: [{10, 20}, {10, 30}, {20, 20}]}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%Shape{points: [{10, 20}, {10, 30}, {20, 20}], stroke: :blue, fill: :black}
+```
+
+```elixir
+IO.puts(Shape.to_svg(shape))
+```
