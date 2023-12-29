@@ -1,0 +1,144 @@
+# Geeky If
+
+```elixir
+import IEx.Helpers
+```
+
+## Section
+
+```elixir
+keyword = [{:do, :something}, {:else, :something}]
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[do: :something, else: :something]
+```
+
+```elixir
+x = 42
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+42
+```
+
+```elixir
+if x == 42, do: :cool, else: :bogus
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:cool
+```
+
+```elixir
+if(x == 42, do: :cool, else: :bogus)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:cool
+```
+
+```elixir
+if(x == 42, do: :cool, else: :bogus)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:cool
+```
+
+```elixir
+if(x == 42, [{:do, :cool}, {:else, :bogus}])
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:cool
+```
+
+```elixir
+"""
+def my_fun(arg1, arg2) do
+  :something
+end
+"""
+
+# same as -> do: :cool, else: :bogus
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"def my_fun(arg1, arg2) do\n  :something\nend\n"
+```
+
+```elixir
+quote do
+  if x == 42 do
+    :cool
+  else
+    :bogus
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:if, [context: Elixir, imports: [{2, Kernel}]],
+ [
+   {:==, [context: Elixir, imports: [{2, Kernel}]], [{:x, [], Elixir}, 42]},
+   [do: :cool, else: :bogus]
+ ]}
+```
+
+```elixir
+# {:if, [context: Elixir, imports: [{2, Kernel}]],
+#  [
+#     # have two elements
+#    {:==, [context: Elixir, imports: [{2, Kernel}]], [{:x, [], Elixir}, 42]},
+#    [do: :cool, else: :bogus]
+#  ]}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+nil
+```
+
+```elixir
+syntax_tree = v(9)
+```
+
+```elixir
+syntax_tree |> elem(2)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+error: undefined variable "syntax_tree"
+  #cell:v4u2lf6f4eqmjne3t3mqnaxpn4zkw6zf:1
+
+```
+
+```elixir
+syntax_tree |> elem(2) |> length
+```
+
+```elixir
+if(foo, do: bar)
+
+if(foo, do: bar, else: baz)
+```
