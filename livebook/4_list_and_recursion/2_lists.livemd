@@ -1,0 +1,98 @@
+# Lists
+
+```elixir
+import IEx.Helpers
+```
+
+## Idiomatic Elixir
+
+* sequential (enumerable)
+* like datatypes
+* acceptable for short or long
+* access head first
+
+## Syntax
+
+```elixir
+list = [1, 2, 3]
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[1, 2, 3]
+```
+
+```elixir
+[19, 0 | list]
+# | -> list append operator
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[19, 0, 1, 2, 3]
+```
+
+## Match
+
+```elixir
+[head | tail] = list
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[1, 2, 3]
+```
+
+```elixir
+head
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1
+```
+
+```elixir
+tail
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[2, 3]
+```
+
+```elixir
+[one, two | rest] = [1, 2]
+{one, two, rest}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{1, 2, []}
+```
+
+```elixir
+{[first | _], _, _} = {[1, 2, 3], 4, 5}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{[1, 2, 3], 4, 5}
+```
+
+```elixir
+first
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1
+```
