@@ -1,0 +1,110 @@
+# Truth And Controls
+
+## Section
+
+```elixir
+
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+nil
+```
+
+## Flow Of Control
+
+```elixir
+x = 10
+y = 10
+x
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+10
+```
+
+```elixir
+if x > 9 do
+  "it's true"
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"it's true"
+```
+
+```elixir
+if x > 10 do
+  "it's true"
+else
+  "it's false"
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"it's false"
+```
+
+```elixir
+result =
+  cond do
+    x > 15 -> "so very hot"
+    x > 10 -> "a little hot"
+    true -> "whatever"
+  end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"whatever"
+```
+
+```elixir
+result
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"whatever"
+```
+
+```elixir
+answer =
+  case x > 10 do
+    # pattern -> thing-to-execute
+    true -> "it's true"
+    # _ -> wild card, match everything
+    _ -> "it's false"
+  end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"it's false"
+```
+
+```elixir
+looks_safe =
+  case do_something_dangerous() do
+    {:ok, result} -> result
+    error -> error
+  end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+error: undefined function do_something_dangerous/0 (there is no such import)
+  #cell:24o7ojgnyveydlfllt5fc3pttzvnt74n:2
+
+```
