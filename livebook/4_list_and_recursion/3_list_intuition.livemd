@@ -1,0 +1,140 @@
+# List Intuition
+
+```elixir
+import IEx.Helpers
+```
+
+## List Operators
+
+* append item to a list
+* got the first element of a list (head or `hd`)
+* get the rest of a list, discarding the first (tail or `tl`)
+
+## Build list with tuples
+
+## Use our list in a program
+
+```elixir
+defmodule Tlist do
+  # Our list should look like {3, 2, 1, 137}
+
+  def empty, do: {}
+
+  def add(tlist, item) do
+    {item, tlist}
+  end
+
+  def head({first, _rest}) do
+    first
+  end
+
+  def tail({_first, rest}) do
+    rest
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, Tlist, <<70, 79, 82, 49, 0, 0, 7, ...>>, {:tail, 1}}
+```
+
+### Try it out!
+
+```elixir
+tlist = {3, {2, {1, {}}}}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{3, {2, {1, {}}}}
+```
+
+```elixir
+import Tlist
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Tlist
+```
+
+```elixir
+tlist |> head
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+3
+```
+
+```elixir
+tlist |> tail |> head
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+2
+```
+
+```elixir
+tlist |> tail |> tail |> head
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1
+```
+
+## Within a program
+
+counts and sum with recursion
+
+```elixir
+defmodule TlistFunctions do
+  def count({}) do
+    0
+  end
+
+  def count({_item, items}) do
+    1 + count(items)
+  end
+
+  def sum({}) do
+    0
+  end
+
+  def sum({number, numbers}) do
+    number + sum(numbers)
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, TlistFunctions, <<70, 79, 82, 49, 0, 0, 6, ...>>, {:sum, 1}}
+```
+
+```elixir
+import Tlist
+
+tlist = empty() |> add(1) |> add(2) |> add(3)
+# TlistFunctions.count(tlist)
+%{
+  sum: TlistFunctions.sum(tlist),
+  count: TlistFunctions.count(tlist)
+}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{count: 3, sum: 6}
+```
