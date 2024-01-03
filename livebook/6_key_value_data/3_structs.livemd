@@ -1,0 +1,284 @@
+# Structs
+
+```elixir
+import IEx.Helpers
+```
+
+## Defining Structs
+
+```elixir
+defmodule User do
+  defstruct name: "Jill", age: 25
+
+  def new do
+    %User{name: "Bruce", age: 21}
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, User, <<70, 79, 82, 49, 0, 0, 8, ...>>, {:new, 0}}
+```
+
+```elixir
+defmodule Point do
+  defstruct [:x, :y]
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, Point, <<70, 79, 82, 49, 0, 0, 8, ...>>, %Point{x: nil, y: nil}}
+```
+
+```elixir
+Point.__struct__()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%Point{x: nil, y: nil}
+```
+
+```elixir
+User.new()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%User{name: "Bruce", age: 21}
+```
+
+```elixir
+u = %User{age: 26}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%User{name: "Jill", age: 26}
+```
+
+## The __struct__ key and function
+
+```elixir
+# exports from erlang
+exports(User)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+__struct__/0     __struct__/1     new/0            
+```
+
+```elixir
+# __ => dunder struct => double underscore struct
+User.__struct__(%{age: 30})
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%User{name: "Jill", age: 30}
+```
+
+```elixir
+# __ => dunder struct => double underscore struct
+User.__struct__(age: 30)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%User{name: "Jill", age: 30}
+```
+
+```elixir
+Map.keys(u)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[:name, :__struct__, :age]
+```
+
+```elixir
+u.__struct__
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+User
+```
+
+## Protocols
+
+```elixir
+i(%{})
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Term
+  %{}
+Data type
+  Map
+Reference modules
+  Map
+Implemented protocols
+  Collectable, Enumerable, IEx.Info, Inspect
+```
+
+```elixir
+i(%Point{})
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Term
+  %Point{x: nil, y: nil}
+Data type
+  Point
+Description
+  This is a struct. Structs are maps with a __struct__ key.
+Reference modules
+  Point, Map
+Implemented protocols
+  IEx.Info, Inspect
+```
+
+```elixir
+is_map(%Point{})
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+true
+```
+
+```elixir
+is_struct(%Point{})
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+true
+```
+
+```elixir
+Enum.count(%{one: 1})
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1
+```
+
+```elixir
+Enum.count(Point.__struct__())
+```
+
+```elixir
+map = %{one: 1, two: 2}
+map[:two]
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+2
+```
+
+```elixir
+map.one
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1
+```
+
+```elixir
+{map.one, map[:two]}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{1, 2}
+```
+
+```elixir
+user = User.new()
+user.name
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"Bruce"
+```
+
+```elixir
+user[:age]
+```
+
+## Common structs in Elixir
+
+```elixir
+IEx.Helpers.i(Date.utc_today())
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Term
+  ~D[2024-01-03]
+Data type
+  Date
+Description
+  This is a struct representing a date. It is commonly
+  represented using the `~D` sigil syntax, that is
+  defined in the `Kernel.sigil_D/2` macro.
+Raw representation
+  %Date{year: 2024, month: 1, day: 3, calendar: Calendar.ISO}
+Reference modules
+  Date, Calendar, Map
+Implemented protocols
+  IEx.Info, Inspect, String.Chars
+```
+
+```elixir
+Date.utc_today() |> Map.keys()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[:calendar, :month, :__struct__, :day, :year]
+```
+
+```elixir
+DateTime.utc_now() |> Map.keys()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[:microsecond, :second, :calendar, :month, :__struct__, :day, :year, :minute, :hour, :time_zone,
+ :zone_abbr, :utc_offset, :std_offset]
+```
