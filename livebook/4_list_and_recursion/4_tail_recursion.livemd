@@ -1,0 +1,52 @@
+# Tail Recursion
+
+```elixir
+import IEx.Helpers
+```
+
+## Section
+
+```elixir
+defmodule ListFunctions do
+  def count(list), do: count(list, 0)
+
+  defp count([], acc) do
+    acc
+  end
+
+  defp count([_first | rest], acc) do
+    # 1. build accumulator
+    new_acc = acc + 1
+    # 2. call count
+    count(rest, new_acc)
+  end
+end
+
+# user calls: count([1,2,3])
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, ListFunctions, <<70, 79, 82, 49, 0, 0, 6, ...>>, {:count, 2}}
+```
+
+```elixir
+ListFunctions.count([1, 2, 3, 4, 5, 6])
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+6
+```
+
+```elixir
+ListFunctions.count([1, 2, 3, 4, 5, 6])
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+6
+```

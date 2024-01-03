@@ -1,0 +1,276 @@
+# Maps
+
+```elixir
+import IEx.Helpers
+```
+
+## History
+
+### last changes for Erlang before Elixir 1.0
+
+```elixir
+i([{:one, 1}, {:two, 2}])
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Term
+  [one: 1, two: 2]
+Data type
+  List
+Description
+  This is what is referred to as a "keyword list". A keyword list is a list
+  of two-element tuples where the first element of each tuple is an atom.
+Reference modules
+  Keyword, List
+Implemented protocols
+  Collectable, Enumerable, IEx.Info, Inspect, List.Chars, String.Chars
+```
+
+### Ruby syntax for a map: `{}`
+
+* but in elixir `{}` is syntax for tuple
+* alrady first element in erlang
+
+```elixir
+map = %{one: 1, two: 2}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{one: 1, two: 2}
+```
+
+```elixir
+# list of two tuples
+keyword = [one: 1, two: 2]
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[one: 1, two: 2]
+```
+
+```elixir
+keyword.one
+```
+
+```elixir
+# yep
+keyword[:one]
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1
+```
+
+## Syntax and Implementation
+
+```elixir
+a = [1, 2, 3]
+# nope, inefficient in elixir
+a[2]
+```
+
+Syntactically, keywords are sometimes preferrable. For example, the last argument of a function.
+If it is a keyword, we can do this: `fun(a, option_one:1, option_2: 2)`
+
+<!-- livebook:{"break_markdown":true} -->
+
+Maps have better performance!
+
+```elixir
+map = %{"key1" => "value1", "key2" => "value2"}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{"key1" => "value1", "key2" => "value2"}
+```
+
+```elixir
+life = %{{1, 1} => true, {1, 2} => false}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{{1, 1} => true, {1, 2} => false}
+```
+
+```elixir
+person = %{name: "Jane", profession: "programmer"}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{name: "Jane", profession: "programmer"}
+```
+
+## Access
+
+```elixir
+Map.get(person, :name)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"Jane"
+```
+
+```elixir
+{Map.get(person, :name), person.name, person[:name], Map.fetch(person, :name)}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{"Jane", "Jane", "Jane", {:ok, "Jane"}}
+```
+
+## Updates
+
+```elixir
+new_person = %{person | name: "John", profession: "Author"}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{name: "John", profession: "Author"}
+```
+
+```elixir
+Map.put(person, :name, "John")
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{name: "John", profession: "programmer"}
+```
+
+```elixir
+person
+|> Map.put(:name, "John")
+|> Map.put(:profession, "author")
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{name: "John", profession: "author"}
+```
+
+```elixir
+updated_person =
+  Map.update(person, :profession, "unknown", fn profession ->
+    "senior " <> profession
+  end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{name: "Jane", profession: "senior programmer"}
+```
+
+```elixir
+updated_person =
+  Map.update(person, :professio, "unknown", fn profession ->
+    "senior " <> profession
+  end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{name: "Jane", professio: "unknown", profession: "programmer"}
+```
+
+## Bulk
+
+```elixir
+Map.keys(person)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[:name, :profession]
+```
+
+```elixir
+Map.values(person)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+["Jane", "programmer"]
+```
+
+```elixir
+{Map.keys(person), Map.values(person)}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{[:name, :profession], ["Jane", "programmer"]}
+```
+
+```elixir
+IEx.Helpers.i(person)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Term
+  %{name: "Jane", profession: "programmer"}
+Data type
+  Map
+Reference modules
+  Map
+Implemented protocols
+  Collectable, Enumerable, IEx.Info, Inspect
+```
+
+```elixir
+Map.to_list(person)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[name: "Jane", profession: "programmer"]
+```
+
+```elixir
+list = [{"name", "Jane"}, {"profession", "programmer"}]
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[{"name", "Jane"}, {"profession", "programmer"}]
+```
+
+```elixir
+Enum.into(list, %{})
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{"name" => "Jane", "profession" => "programmer"}
+```
