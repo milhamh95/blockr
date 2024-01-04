@@ -1,46 +1,30 @@
 defmodule Group do
   def move_down(points) do
-    points
+    Enum.map(points, &Point.move_down/1)
   end
 
   def move_left(points) do
-    points
+    Enum.map(points, &Point.move_left/1)
   end
 
-  @spec move_right({any(), number()}) :: {any(), number()}
   def move_right(points) do
-    points
+    Enum.map(points, &Point.move_right/1)
   end
 
   def swap(points) do
-    points
+    Enum.map(points, &Point.swap/1)
   end
 
   def flip_left_right(points) do
-    points
+    Enum.map(points, &Point.flip_left_right/1)
   end
 
   def flip_top_bottom(points) do
-    points
+    Enum.map(points, &Point.flip_top_bottom/1)
   end
 
-  def rotate(point, 0) do
-    point
+  def rotate(points, degrees) do
+    Enum.map(points, &Point.rotate(&1, degrees))
   end
 
-  def rotate(points, 90) do
-    points
-  end
-
-  def rotate(points, 180) do
-    points
-  end
-
-  def rotate(points, 270) do
-    points
-  end
-
-  def rotate(points, 360) do
-    points
-  end
 end
