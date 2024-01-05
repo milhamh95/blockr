@@ -15,15 +15,19 @@ defmodule Tetromino do
   end
 
   def right(tetro) do
-    tetro
+    %{tetro | location: Point.move_right(tetro.location)}
   end
 
   def fall(tetro) do
-    tetro
+    %{tetro | location: Point.move_down(tetro.location)}
+  end
+
+  def rotate_right_90(%{rotation: 270}=tetro) do
+    %{tetro | rotation: 0}
   end
 
   def rotate_right_90(tetro) do
-    tetro
+    %{tetro | rotation: rem(tetro.rotation + 90, 360)}
   end
 end
 
