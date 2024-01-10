@@ -1,0 +1,231 @@
+# Character Data
+
+```elixir
+import IEx.Helpers
+```
+
+## Integers and Characters
+
+Characters data is nothing more than integer values of code that point to Unitcode table
+
+```elixir
+i(97)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Term
+  97
+Data type
+  Integer
+Reference modules
+  Integer
+Implemented protocols
+  IEx.Info, Inspect, List.Chars, String.Chars
+```
+
+```elixir
+?a
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+97
+```
+
+```elixir
+i(?a)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Term
+  97
+Data type
+  Integer
+Reference modules
+  Integer
+Implemented protocols
+  IEx.Info, Inspect, List.Chars, String.Chars
+```
+
+```elixir
+{?c, ?a, ?t}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{99, 97, 116}
+```
+
+## Lists And Charlists
+
+```elixir
+i([99, 97, 116])
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Term
+  ~c"cat"
+Data type
+  List
+Description
+  This is a list of integers that is printed using the `~c` sigil syntax,
+  defined by the `Kernel.sigil_c/2` macro, because all the integers in it
+  represent printable ASCII characters. Conventionally, a list of Unicode
+  code points is known as a charlist and a list of ASCII characters is a
+  subset of it.
+Raw representation
+  [99, 97, 116]
+Reference modules
+  List
+Implemented protocols
+  Collectable, Enumerable, IEx.Info, Inspect, List.Chars, String.Chars
+```
+
+```elixir
+[99, 97, 116] == ~c"cat"
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+true
+```
+
+```elixir
+# list is 
+[:a, :sequence, :of, :links]
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[:a, :sequence, :of, :links]
+```
+
+```elixir
+"cat" == ~c"cat"
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+false
+```
+
+## Binaries and Strings
+
+```elixir
+# Binary
+i(<<0, 1, 2, 3, 4>>)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Term
+  <<0, 1, 2, 3, 4>>
+Data type
+  BitString
+Byte size
+  5
+Description
+  This is a string: a UTF-8 encoded binary. It's printed with the `<<>>`
+  syntax (as opposed to double quotes) because it contains non-printable
+  UTF-8 encoded code points (the first non-printable code point being
+  `<<0>>`).
+Reference modules
+  String, :binary
+Implemented protocols
+  Collectable, IEx.Info, Inspect, List.Chars, String.Chars
+```
+
+```elixir
+exports(:binary)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+bin_to_list/1               bin_to_list/2               bin_to_list/3               
+replace/3                   encode_hex/1                encode_hex/2                
+decode_hex/1                replace/4                   split/3                     
+split/2                     decode_unsigned/2           decode_unsigned/1           
+encode_unsigned/2           encode_unsigned/1           referenced_byte_size/1      
+copy/2                      copy/1                      list_to_bin/1               
+part/3                      part/2                      at/2                        
+last/1                      first/1                     longest_common_suffix/1     
+longest_common_prefix/1     matches/3                   matches/2                   
+match/3                     match/2                     compile_pattern/1           
+```
+
+```elixir
+byte_size(<<0, 1, 2, 3, 4>>)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+5
+```
+
+```elixir
+bit_size(<<0, 1, 2, 3, 4>>)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+40
+```
+
+```elixir
+<<?c, ?a, ?t>>
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"cat"
+```
+
+```elixir
+i(<<?c, ?a, ?t>>)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Term
+  "cat"
+Data type
+  BitString
+Byte size
+  3
+Description
+  This is a string: a UTF-8 encoded binary. It's printed surrounded by
+  "double quotes" because all UTF-8 encoded code points in it are printable.
+Raw representation
+  <<99, 97, 116>>
+Reference modules
+  String, :binary
+Implemented protocols
+  Collectable, IEx.Info, Inspect, List.Chars, String.Chars
+```
+
+```elixir
+<<99, 97, 116>> == "cat"
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+true
+```
