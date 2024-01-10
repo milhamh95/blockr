@@ -1,0 +1,237 @@
+# MapSet
+
+```elixir
+import IEx.Helpers
+```
+
+## Section
+
+```elixir
+h(MapSet)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+
+                                     MapSet                                     
+
+Functions that work on sets.
+
+A set is a data structure that can contain unique elements of any kind, without
+any particular order. MapSet is the "go to" set data structure in Elixir.
+
+A set can be constructed using MapSet.new/0:
+
+    iex> MapSet.new()
+    MapSet.new([])
+
+Elements in a set don't have to be of the same type and they can be populated
+from an enumerable (t:Enumerable.t/0) using MapSet.new/1:
+
+    iex> MapSet.new([1, :two, {"three"}])
+    MapSet.new([1, :two, {"three"}])
+
+Elements can be inserted using MapSet.put/2:
+
+    iex> MapSet.new([2]) |> MapSet.put(4) |> MapSet.put(0)
+    MapSet.new([0, 2, 4])
+
+By definition, sets can't contain duplicate elements: when inserting an element
+in a set where it's already present, the insertion is simply a no-op.
+
+    iex> map_set = MapSet.new()
+    iex> MapSet.put(map_set, "foo")
+    MapSet.new(["foo"])
+    iex> map_set |> MapSet.put("foo") |> MapSet.put("foo")
+    MapSet.new(["foo"])
+
+A MapSet is represented internally using the %MapSet{} struct. This struct can
+be used whenever there's a need to pattern match on something being a MapSet:
+
+    iex> match?(%MapSet{}, MapSet.new())
+    true
+
+Note that, however, the struct fields are private and must not be accessed
+directly; use the functions in this module to perform operations on sets.
+
+MapSets can also be constructed starting from other collection-type data
+structures: for example, see MapSet.new/1 or Enum.into/2.
+
+MapSet is built on top of Erlang's :sets
+(https://www.erlang.org/doc/man/sets.html) (version 2). This means that they
+share many properties, including logarithmic time complexity. Erlang :sets
+(version 2) are implemented on top of maps, so see the documentation for Map
+for more information on its execution time complexity.
+
+```
+
+```elixir
+empty = MapSet.new()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+MapSet.new([])
+```
+
+```elixir
+eight = MapSet.new(1..8)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+MapSet.new([1, 2, 3, 4, 5, 6, 7, 8])
+```
+
+```elixir
+MapSet.member?(eight, 8)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+true
+```
+
+```elixir
+i(eight)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Term
+  MapSet.new([1, 2, 3, 4, 5, 6, 7, 8])
+Data type
+  MapSet
+Description
+  This is a struct. Structs are maps with a __struct__ key.
+Reference modules
+  MapSet, Map
+Implemented protocols
+  Collectable, Enumerable, IEx.Info, Inspect
+```
+
+```elixir
+# match operator
+%MapSet{} = eight
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+MapSet.new([1, 2, 3, 4, 5, 6, 7, 8])
+```
+
+```elixir
+%Date{} = eight
+```
+
+```elixir
+Map.keys(eight)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[:map, :__struct__]
+```
+
+```elixir
+Map.values(eight)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[%{1 => [], 2 => [], 3 => [], 4 => [], 5 => [], 6 => [], 7 => [], 8 => []}, MapSet]
+```
+
+## Adding Values
+
+```elixir
+MapSet.put(empty, :one)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+MapSet.new([:one])
+```
+
+```elixir
+MapSet.put(empty, :one) |> MapSet.to_list()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[:one]
+```
+
+## Set Operations
+
+```elixir
+one_four = MapSet.new(1..4)
+five_eight = MapSet.new(5..8)
+two_six = MapSet.new(2..6)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+MapSet.new([2, 3, 4, 5, 6])
+```
+
+```elixir
+MapSet.disjoint?(one_four, five_eight)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+true
+```
+
+```elixir
+MapSet.intersection(one_four, five_eight)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+MapSet.new([])
+```
+
+```elixir
+MapSet.intersection(one_four, two_six)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+MapSet.new([2, 3, 4])
+```
+
+```elixir
+%{} |> Map.put(:one, []) |> Map.put(:one, [])
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{one: []}
+```
+
+```elixir
+MapSet.new() |> MapSet.put(:one) |> MapSet.put(:one)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+MapSet.new([:one])
+```
