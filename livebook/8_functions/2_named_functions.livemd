@@ -1,0 +1,146 @@
+# Functions
+
+```elixir
+# import IEx.Helpers
+```
+
+## Named Functions
+
+```elixir
+IO.puts("hello")
+# side effect, print "hello"
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+hello
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
+```
+
+## Capture
+
+```elixir
+function = &IO.inspect/1
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+&IO.inspect/1
+```
+
+```elixir
+i(function)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+error: undefined function i/1 (there is no such import)
+  #cell:u3zksoroaaguytlpbz74g7litccurzv7:1
+
+```
+
+## As value
+
+```elixir
+Enum.each(1..8, function)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1
+2
+3
+4
+5
+6
+7
+8
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
+```
+
+## Erlang
+
+```elixir
+:random.uniform(2)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1
+```
+
+```elixir
+random_float_fn = &:random.uniform/0
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+&:random.uniform/0
+```
+
+```elixir
+random_float_fn.()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+0.7230402056221108
+```
+
+```elixir
+Stream.repeatedly(random_float_fn) |> Enum.take(10)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[0.94581636451987, 0.5014907142064751, 0.311326754804393, 0.597447524783298, 0.915656206971831,
+ 0.6669572934854013, 0.47712105608919275, 0.5965100813402789, 0.14210821770124227,
+ 0.20944855618709624]
+```
+
+```elixir
+import IEx.Helpers, only: [i: 1]
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+IEx.Helpers
+```
+
+```elixir
+i(&IO.puts/1)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Term
+  &IO.puts/1
+Data type
+  Function
+Type
+  external
+Arity
+  1
+Implemented protocols
+  Enumerable, IEx.Info, Inspect
+```
