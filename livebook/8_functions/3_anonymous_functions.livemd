@@ -1,0 +1,159 @@
+# Anonymous Functions
+
+```elixir
+import IEx.Helpers
+```
+
+## Anonymous Function
+
+```elixir
+# format of anonymous function
+# fn x -> x +1 end
+inc = fn x -> x + 1 end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+#Function<42.105768164/1 in :erl_eval.expr/6>
+```
+
+```elixir
+i(inc)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Term
+  #Function<42.105768164/1 in :erl_eval.expr/6>
+Data type
+  Function
+Type
+  local
+Arity
+  1
+Description
+  This is an anonymous function.
+Implemented protocols
+  Enumerable, IEx.Info, Inspect
+```
+
+```elixir
+inc.(42)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+43
+```
+
+```elixir
+func2 = &IO.inspect/1
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+&IO.inspect/1
+```
+
+```elixir
+i(func2)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Term
+  &IO.inspect/1
+Data type
+  Function
+Type
+  external
+Arity
+  1
+Implemented protocols
+  Enumerable, IEx.Info, Inspect
+```
+
+```elixir
+func2.(42)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+42
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+42
+```
+
+```elixir
+h(Enum.map())
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+
+                            def map(enumerable, fun)                            
+
+  @spec map(t(), (element() -> any())) :: list()
+
+Returns a list where each element is the result of invoking fun on each
+corresponding element of enumerable.
+
+For maps, the function expects a key-value tuple.
+
+## Examples
+
+    iex> Enum.map([1, 2, 3], fn x -> x * 2 end)
+    [2, 4, 6]
+    
+    iex> Enum.map([a: 1, b: 2], fn {k, v} -> {k, -v} end)
+    [a: -1, b: -2]
+
+```
+
+```elixir
+Enum.map([1, 2, 3], fn x -> x * x end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[1, 4, 9]
+```
+
+```elixir
+Enum.map([1, 2, 3], fn x ->
+  x * x
+end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[1, 4, 9]
+```
+
+```elixir
+Enum.map(
+  [1, 2, 3],
+  fn x ->
+    x * x
+  end
+)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[1, 4, 9]
+```
