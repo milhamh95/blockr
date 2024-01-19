@@ -1,0 +1,81 @@
+# IO Lists
+
+```elixir
+import IEx.Helpers
+```
+
+## Section
+
+```elixir
+username = "batate"
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"batate"
+```
+
+```elixir
+server = "example.com"
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"example.com"
+```
+
+```elixir
+connector = "@"
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"@"
+```
+
+```elixir
+username <> connector <> server
+# 🚫 inefficient
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"batate@example.com"
+```
+
+```elixir
+combined = username <> connector <> server
+IO.puts(combined)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+batate@example.com
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
+```
+
+```elixir
+IO.puts([username, connector, server])
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+batate@example.com
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
+```
