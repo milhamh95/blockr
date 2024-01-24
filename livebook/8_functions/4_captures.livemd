@@ -1,0 +1,150 @@
+# Captures
+
+```elixir
+import IEx.Helpers
+```
+
+## Intuition
+
+```elixir
+fun = &(&1 + 1)
+
+# x + 1
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+#Function<42.105768164/1 in :erl_eval.expr/6>
+```
+
+```elixir
+fun.(42)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+43
+```
+
+```elixir
+i(fun)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Term
+  #Function<42.105768164/1 in :erl_eval.expr/6>
+Data type
+  Function
+Type
+  local
+Arity
+  1
+Description
+  This is an anonymous function.
+Implemented protocols
+  Enumerable, IEx.Info, Inspect
+```
+
+```elixir
+fun2 = &(&1 + &2)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+&:erlang.+/2
+```
+
+```elixir
+fun2.(42, 43)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+85
+```
+
+```elixir
+fun3 = &(&1 + &1)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+#Function<42.105768164/1 in :erl_eval.expr/6>
+```
+
+```elixir
+fun3.(4)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+8
+```
+
+## Performance
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+&[&1|&2]
+```
+
+or
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+fn item, list ->
+  [item|list]
+end
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+prefer using anonymous function in elixir
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+fn item, list ->
+  [item|list]
+end
+```
+
+over
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+&[&1|&2]
+```
+
+## unless!!!
+
+prefer:
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+&IO.inspect/1
+```
+
+over:
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+fn item -> IO.inspect(item) end
+```
+
+prefer `&IO.inspect/1`
+
+* initial ampersand marks as capture
