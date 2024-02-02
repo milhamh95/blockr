@@ -1,0 +1,89 @@
+# Enum Functions
+
+```elixir
+import IEx.Helpers
+require Integer
+```
+
+## Functions
+
+```elixir
+h(Enum)
+```
+
+```elixir
+exports(Enum)
+```
+
+```elixir
+Enum.__info__(:functions)
+```
+
+```elixir
+:functions
+|> Enum.__info__()
+|> Enum.map(fn {name, arity} ->
+  "#{name}/#{arity}"
+end)
+|> Enum.each(&IO.puts/1)
+
+# |> Enum.each(fn item -> IO.puts(item) end)
+```
+
+```elixir
+h(Enum.any?())
+```
+
+```elixir
+1..20 |> Enum.any?(&Integer.is_even/1)
+
+1..20 |> Enum.all?(&Integer.is_even/1)
+```
+
+```elixir
+%{x: 1, y: 2} |> Enum.empty?()
+```
+
+```elixir
+901..1000 |> Enum.filter(&(&1 > 990))
+```
+
+```elixir
+901..1000 |> Enum.find(&(&1 > 990))
+```
+
+```elixir
+1..1000 |> Enum.reject(&(&1 > 9))
+```
+
+```elixir
+[1, 1, 1, 1, 12, 2, 2, 2, 5, 5, 5, 5] |> Enum.dedup()
+```
+
+```elixir
+1..1000 |> Enum.shuffle() |> Enum.take(20)
+```
+
+```elixir
+1..1000 |> Enum.shuffle() |> Enum.take_while(fn x -> x > 10 end)
+```
+
+```elixir
+1..1000 |> Enum.shuffle() |> Enum.drop(15) |> Enum.count()
+```
+
+```elixir
+1..1000 |> Enum.shuffle() |> Enum.drop_while(fn x -> x > 500 end)
+```
+
+```elixir
+Enum.zip(1..10, 2..20)
+```
+
+```elixir
+Enum.zip(Enum.shuffle(21..30), 1..10)
+```
+
+```elixir
+Enum.with_index(Enum.shuffle(21..30))
+```
