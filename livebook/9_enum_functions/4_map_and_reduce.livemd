@@ -1,0 +1,133 @@
+# Map and Reduce
+
+```elixir
+import IEx.Helpers
+```
+
+## Section
+
+```elixir
+Enum.map([1, 2, 3], fn x -> x + 1 end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[2, 3, 4]
+```
+
+```elixir
+Enum.map([1, 2, 3], fn x -> x * 2 end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[2, 4, 6]
+```
+
+```elixir
+Enum.reduce(
+  [1, 2, 3],
+  0,
+  fn item, acc ->
+    item + acc
+  end
+)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+6
+```
+
+```elixir
+Enum.reduce(1..3, 1, fn item, acc -> item * acc end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+6
+```
+
+```elixir
+h(Enum.reduce())
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+
+                          def reduce(enumerable, fun)                           
+
+  @spec reduce(t(), (element(), acc() -> acc())) :: acc()
+
+Invokes fun for each element in the enumerable with the accumulator.
+
+Raises Enum.EmptyError if enumerable is empty.
+
+The first element of the enumerable is used as the initial value of the
+accumulator. Then, the function is invoked with the next element and the
+accumulator. The result returned by the function is used as the accumulator for
+the next iteration, recursively. When the enumerable is done, the last
+accumulator is returned.
+
+Since the first element of the enumerable is used as the initial value of the
+accumulator, fun will only be executed n - 1 times where n is the length of the
+enumerable. This function won't call the specified function for enumerables
+that are one-element long.
+
+If you wish to use another value for the accumulator, use Enum.reduce/3.
+
+## Examples
+
+    iex> Enum.reduce([1, 2, 3, 4], fn x, acc -> x * acc end)
+    24
+
+
+                        def reduce(enumerable, acc, fun)                        
+
+  @spec reduce(t(), acc(), (element(), acc() -> acc())) :: acc()
+
+Invokes fun for each element in the enumerable with the accumulator.
+
+The initial value of the accumulator is acc. The function is invoked for each
+element in the enumerable with the accumulator. The result returned by the
+function is used as the accumulator for the next iteration. The function
+returns the last accumulator.
+
+## Examples
+
+    iex> Enum.reduce([1, 2, 3], 0, fn x, acc -> x + acc end)
+    6
+    
+    iex> Enum.reduce(%{a: 2, b: 3, c: 4}, 0, fn {_key, val}, acc -> acc + val end)
+    9
+
+## Reduce as a building block
+
+Reduce (sometimes called fold) is a basic building block in functional
+programming. Almost all of the functions in the Enum module can be implemented
+on top of reduce. Those functions often rely on other operations, such as
+Enum.reverse/1, which are optimized by the runtime.
+
+For example, we could implement map/2 in terms of reduce/3 as follows:
+
+    def my_map(enumerable, fun) do
+      enumerable
+      |> Enum.reduce([], fn x, acc -> [fun.(x) | acc] end)
+      |> Enum.reverse()
+    end
+
+In the example above, Enum.reduce/3 accumulates the result of each call to fun
+into a list in reverse order, which is correctly ordered at the end by calling
+Enum.reverse/1.
+
+Implementing functions like map/2, filter/2 and others are a good exercise for
+understanding the power behind Enum.reduce/3. When an operation cannot be
+expressed by any of the functions in the Enum module, developers will most
+likely resort to reduce/3.
+
+```
