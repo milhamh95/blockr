@@ -52,4 +52,7 @@ defmodule Point do
     point
   end
 
+  def paint(point, color) do
+    {point, color}
+  end
 end

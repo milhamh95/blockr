@@ -21,11 +21,15 @@ defmodule Canvas do
     |> Kino.Image.new(:svg)
   end
 
-  def draw({row, col}, width) do
+  def draw({{row, col}, color}, width) when is_binary(color) do
     x = (col - 1) * width
     y = (row - 1) * width
 
-    ~s[<rect x="#{x}" y="#{y}" width="#{width}" height="#{width}" fill="black" />]
+    ~s[<rect x="#{x}" y="#{y}" width="#{width}" height="#{width}" fill="#{color}" />]
+  end
+
+  def draw({_row, _col}=point, width) do
+    draw({point, "black"}, width)
   end
 
   def draw(points, width) when is_list(points) do

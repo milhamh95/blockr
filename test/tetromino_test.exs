@@ -13,7 +13,7 @@ defmodule TetrominoTest do
     tetro = context.tetro
 
     expected_tetro = %Tetromino{
-      location: {1,2}
+      location: {0,-1}
     }
 
     assert Tetromino.left(tetro) == expected_tetro
@@ -23,7 +23,7 @@ defmodule TetrominoTest do
     tetro = context.tetro
 
     expected_tetro = %Tetromino{
-      location: {1,4}
+      location: {0,1}
     }
 
     assert Tetromino.right(tetro) == expected_tetro
@@ -33,7 +33,7 @@ defmodule TetrominoTest do
     tetro = context.tetro
 
     expected_tetro = %Tetromino{
-      location: {2,3}
+      location: {1,0}
     }
 
     assert Tetromino.fall(tetro) == expected_tetro

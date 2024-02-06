@@ -46,6 +46,7 @@ defmodule PointTest do
   end
 
   test "rotate 360" do
-    assert Point.rotate({2,4}, 360) == {}
+      IO.inspect(Point.rotate({2,4}, 360))
+    assert Point.rotate({2,4}, 360) == {2,4}
   end
 end
