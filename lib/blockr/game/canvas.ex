@@ -1,4 +1,4 @@
-defmodule Canvas do
+defmodule Blockr.Game.Canvas do
   def new(contents) do
     """
     <svg

@@ -1,4 +1,4 @@
-defmodule Point do
+defmodule Blockr.Game.Point do
 
   def new(row, col) do
     {row, col}

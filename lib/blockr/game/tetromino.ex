@@ -1,10 +1,12 @@
-defmodule Tetromino do
+defmodule Blockr.Game.Tetromino do
   defstruct [
     name: :i,
     location: {0,0},
     rotation: 0,
     color: :green
   ]
+
+  alias Blockr.Game.{Group, Point}
 
   def new(name \\ :i) do
     %__MODULE__{name: name}

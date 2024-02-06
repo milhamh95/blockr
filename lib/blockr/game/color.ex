@@ -1,4 +1,4 @@
-defmodule Color do
+defmodule Blockr.Game.Color do
   def for(shape_name) do
     case shape_name do
       :i -> "blue"

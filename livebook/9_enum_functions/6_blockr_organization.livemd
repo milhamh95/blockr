@@ -1,0 +1,250 @@
+# Blockr Points
+
+```elixir
+import IEx.Helpers
+```
+
+## one-point
+
+```elixir
+p =
+  Point.new(1, 5)
+  |> Point.move_down()
+  |> Point.move_down()
+  |> Point.move_down()
+  |> Point.move_left()
+  |> Point.move_right()
+
+Canvas.new(p)
+```
+
+## Multiple Point
+
+```elixir
+points =
+  [
+    Point.new(2, 5),
+    Point.new(2, 6),
+    Point.new(3, 4),
+    Point.new(3, 5)
+  ]
+
+Canvas.new(points)
+```
+
+```elixir
+# points = 
+#   [
+#     (Point.new(2,5)|> Point.move_right()),
+#     (Point.new(2,6)|> Point.move_right()),
+#     (Point.new(3,4)|> Point.move_right()),
+#     (Point.new(3,5)|> Point.move_right()),
+#   ]
+
+# points_data = [{2, 5}, {2, 6}, {3, 4}, {3, 5}]
+
+# points = Enum.map(points_data, fn {x, y} ->
+#   Point.new(x, y) |> Point.move_right()
+# end)
+
+# points =
+#   [{2, 5}, {2, 6}, {3, 4}, {3, 5}]
+#   |> Enum.map(fn {x, y} -> Point.new(x, y) |> Point.move_right() end)
+# Canvas.new(points)
+
+# points =
+#   [{2, 5}, {2, 6}, {3, 4}, {3, 5}]
+#   |> Enum.map(&Point.new(elem(&1, 0), elem(&1, 1)) |> Point.move_right())
+#   |> Canvas.new()
+
+points =
+  [
+    Point.new(2, 5),
+    Point.new(2, 6),
+    Point.new(3, 4),
+    Point.new(3, 5)
+  ]
+
+points
+|> Enum.map(&Point.move_right/1)
+|> Enum.map(&Point.move_right/1)
+|> Enum.map(&Point.move_down/1)
+|> Canvas.new()
+```
+
+## Big Tetromino
+
+```elixir
+points =
+  [
+    Point.new(2, 2),
+    Point.new(3, 2),
+    Point.new(4, 2),
+    Point.new(4, 3)
+  ]
+
+Canvas.tetromino(points)
+```
+
+```elixir
+defmodule Spinner do
+  def swap({row, col}) do
+    {col, row}
+  end
+
+  def flip_left_right({row, col}) do
+    {row, 5 - col}
+  end
+
+  def flip_top_bottom({row, col}) do
+    {5 - row, col}
+  end
+
+  def rotate(point, 0) do
+    point
+  end
+
+  def rotate(point, 90) do
+    point |> swap() |> flip_left_right()
+  end
+
+  def rotate(point, 180) do
+    point |> flip_top_bottom() |> flip_left_right()
+  end
+
+  def rotate(point, 270) do
+    point |> swap() |> flip_top_bottom()
+  end
+
+  def rotate(point, 360) do
+    point
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, Spinner, <<70, 79, 82, 49, 0, 0, 8, ...>>, {:rotate, 2}}
+```
+
+```elixir
+Canvas.tetromino(points)
+```
+
+```elixir
+points
+|> Enum.map(&Spinner.rotate(&1, 90))
+|> Canvas.tetromino()
+```
+
+```elixir
+points
+|> Enum.map(&Spinner.rotate(&1, 180))
+|> Canvas.tetromino()
+```
+
+```elixir
+points
+|> Enum.map(&Spinner.rotate(&1, 270))
+|> Canvas.tetromino()
+```
+
+```elixir
+
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+nil
+```
+
+```elixir
+points
+|> Enum.map(&Spinner.swap/1)
+|> Canvas.tetromino()
+```
+
+```elixir
+points
+|> Enum.map(&Spinner.flip_left_right/1)
+|> Canvas.tetromino()
+```
+
+```elixir
+points
+|> Enum.map(&Spinner.flip_top_bottom/1)
+|> Canvas.tetromino()
+```
+
+## Adding swap and all to Points module
+
+```elixir
+Point.new(1, 2) |> Point.swap()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{2, 1}
+```
+
+## Shapes
+
+:i shape
+
+```elixir
+Canvas.tetromino([{1, 2}, {2, 2}, {3, 2}, {4, 2}])
+```
+
+:l shape
+
+```elixir
+Canvas.tetromino([{1, 2}, {2, 2}, {3, 2}, {3, 3}])
+```
+
+:j shape
+
+```elixir
+Canvas.tetromino([{1, 3}, {2, 3}, {3, 2}, {3, 3}])
+```
+
+:o shape
+
+```elixir
+Canvas.tetromino([{2, 2}, {3, 2}, {2, 3}, {3, 3}])
+```
+
+:t shape
+
+```elixir
+Canvas.tetromino([{1, 2}, {2, 2}, {3, 2}, {2, 3}])
+```
+
+:s shape
+
+```elixir
+Canvas.tetromino([{2, 3}, {2, 4}, {3, 2}, {3, 3}])
+```
+
+:z shape
+
+```elixir
+Canvas.tetromino([{2, 2}, {2, 3}, {3, 3}, {3, 4}])
+```
+
+```elixir
+Tetromino.new(:z)
+|> Tetromino.to_group()
+|> Canvas.tetromino()
+```
+
+## Canvas with color
+
+```elixir
+Tetromino.new(:z)
+|> Tetromino.to_group()
+|> Group.paint(:z)
+|> Canvas.tetromino()
+```
