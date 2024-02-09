@@ -1,0 +1,107 @@
+# Histogram
+
+```elixir
+import IEx.Helpers
+```
+
+## Build a histogram 3 ways
+
+## a. Build a histogram with library function
+
+### Example
+
+```
+histogram.build("apple")
+```
+
+apple
+
+```
+a | *
+p | **
+l | *
+e | *
+```
+
+```elixir
+"lets get started on some elixir"
+|> String.graphemes()
+|> Enum.frequencies()
+|> Enum.map(fn {key, value} ->
+  "#{key} | #{String.duplicate(~s[*], value)}"
+end)
+|> Enum.join("\n")
+|> IO.puts()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+  | *****
+a | *
+d | *
+e | *****
+g | *
+i | **
+l | **
+m | *
+n | *
+o | **
+r | **
+s | ***
+t | ****
+x | *
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
+```
+
+## b. Histogram with `Enum.map/1`
+
+```elixir
+"build a histogram with the map function"
+|> String.graphemes()
+|> Enum.group_by(fn x -> x end)
+|> Enum.map(fn {k, v} ->
+  {k, length(v)}
+end)
+|> Enum.map(fn {key, count} ->
+  "#{key} | #{String.duplicate(~s[*], count)}"
+end)
+|> Enum.join("\n")
+|> IO.puts()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+  | ******
+a | ***
+b | *
+c | *
+d | *
+e | *
+f | *
+g | *
+h | ***
+i | ****
+l | *
+m | **
+n | **
+o | **
+p | *
+r | *
+s | *
+t | ****
+u | **
+w | *
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
+```
