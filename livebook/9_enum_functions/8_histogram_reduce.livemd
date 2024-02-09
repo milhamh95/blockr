@@ -1,0 +1,176 @@
+# Histogram
+
+```elixir
+import IEx.Helpers
+```
+
+## Build a histogram 3 ways
+
+## a. Build a histogram with library function
+
+### Example
+
+```
+histogram.build("apple")
+```
+
+apple
+
+```
+a | *
+p | **
+l | *
+e | *
+```
+
+```elixir
+"lets get started on some elixir"
+|> String.graphemes()
+|> Enum.frequencies()
+|> Enum.map(fn {key, value} ->
+  "#{key} | #{String.duplicate(~s[*], value)}"
+end)
+|> Enum.join("\n")
+|> IO.puts()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+  | *****
+a | *
+d | *
+e | *****
+g | *
+i | **
+l | **
+m | *
+n | *
+o | **
+r | **
+s | ***
+t | ****
+x | *
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
+```
+
+## b. Histogram with `Enum.map/1`
+
+```elixir
+"build a histogram with the map function"
+|> String.graphemes()
+|> Enum.group_by(fn x -> x end)
+|> Enum.map(fn {k, v} ->
+  {k, length(v)}
+end)
+|> Enum.map(fn {key, count} ->
+  "#{key} | #{String.duplicate(~s[*], count)}"
+end)
+|> Enum.join("\n")
+|> IO.puts()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+  | ******
+a | ***
+b | *
+c | *
+d | *
+e | *
+f | *
+g | *
+h | ***
+i | ****
+l | *
+m | **
+n | **
+o | **
+p | *
+r | *
+s | *
+t | ****
+u | **
+w | *
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
+```
+
+## c. Histogram with Enum.reduce/3
+
+```elixir
+# add one letter to frequency map
+
+acc = %{"p" => 1, "a" => 1}
+letter = "l"
+
+# Map.put(acc, letter, acc[letter] + 1) broken because of non existent values
+
+# Map.update(acc, letter, 1, &(&1 + 1))
+add_one_letter =
+  fn letter, acc ->
+    Map.update(acc, letter, 1, fn x -> x + 1 end)
+  end
+
+# print one row
+print_one_row =
+  fn {letter, count}, acc ->
+    stars = String.duplicate("*", count)
+    row = "#{letter} | #{stars}"
+    IO.puts(row)
+    [row | acc]
+  end
+
+print_one_row.({"p", 2}, [])
+
+# add one row to our output rows
+"build a histogram with the map function"
+|> String.graphemes()
+|> Enum.reduce(%{}, add_one_letter)
+|> Enum.sort()
+|> Enum.reduce([], print_one_row)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+p | **
+  | ******
+a | ***
+b | *
+c | *
+d | *
+e | *
+f | *
+g | *
+h | ***
+i | ****
+l | *
+m | **
+n | **
+o | **
+p | *
+r | *
+s | *
+t | ****
+u | **
+w | *
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+["w | *", "u | **", "t | ****", "s | *", "r | *", "p | *", "o | **", "n | **", "m | **", "l | *",
+ "i | ****", "h | ***", "g | *", "f | *", "e | *", "d | *", "c | *", "b | *", "a | ***",
+ "  | ******"]
+```
