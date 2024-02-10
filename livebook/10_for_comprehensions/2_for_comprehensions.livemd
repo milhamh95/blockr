@@ -1,0 +1,276 @@
+# For Comprehensions
+
+```elixir
+import IEx.Helpers
+```
+
+## Basics
+
+```elixir
+h(for / 1)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+
+                               defmacro for(args)                               
+
+Comprehensions allow you to quickly build a data structure from an enumerable
+or a bitstring.
+
+Let's start with an example:
+
+    iex> for n <- [1, 2, 3, 4], do: n * 2
+    [2, 4, 6, 8]
+
+A comprehension accepts many generators and filters. for uses the <- operator
+to extract values from the enumerable on its right side and match them against
+the pattern on the left. We call them generators:
+
+    # A list generator:
+    iex> for n <- [1, 2, 3, 4], do: n * 2
+    [2, 4, 6, 8]
+    
+    # A comprehension with two generators
+    iex> for x <- [1, 2], y <- [2, 3], do: x * y
+    [2, 3, 4, 6]
+
+Filters can also be given:
+
+    # A comprehension with a generator and a filter
+    iex> for n <- [1, 2, 3, 4, 5, 6], rem(n, 2) == 0, do: n
+    [2, 4, 6]
+
+Filters must evaluate to truthy values (everything but nil and false). If a
+filter is falsy, then the current value is discarded.
+
+Generators can also be used to filter as it removes any value that doesn't
+match the pattern on the left side of <-:
+
+    iex> users = [user: "john", admin: "meg", guest: "barbara"]
+    iex> for {type, name} when type != :guest <- users do
+    ...>   String.upcase(name)
+    ...> end
+    ["JOHN", "MEG"]
+
+Bitstring generators are also supported and are very useful when you need to
+organize bitstring streams:
+
+    iex> pixels = <<213, 45, 132, 64, 76, 32, 76, 0, 0, 234, 32, 15>>
+    iex> for <<r::8, g::8, b::8 <- pixels>>, do: {r, g, b}
+    [{213, 45, 132}, {64, 76, 32}, {76, 0, 0}, {234, 32, 15}]
+
+Variable assignments inside the comprehension, be it in generators, filters or
+inside the block, are not reflected outside of the comprehension.
+
+Variable assignments inside filters must still return a truthy value, otherwise
+values are discarded. Let's see an example. Imagine you have a keyword list
+where the key is a programming language and the value is its direct parent.
+Then let's try to compute the grandparent of each language. You could try this:
+
+    iex> languages = [elixir: :erlang, erlang: :prolog, prolog: nil]
+    iex> for {language, parent} <- languages, grandparent = languages[parent], do: {language, grandparent}
+    [elixir: :prolog]
+
+Given the grandparents of Erlang and Prolog were nil, those values were
+filtered out. If you don't want this behaviour, a simple option is to move the
+filter inside the do-block:
+
+    iex> languages = [elixir: :erlang, erlang: :prolog, prolog: nil]
+    iex> for {language, parent} <- languages do
+    ...>   grandparent = languages[parent]
+    ...>   {language, grandparent}
+    ...> end
+    [elixir: :prolog, erlang: nil, prolog: nil]
+
+However, such option is not always available, as you may have further filters.
+An alternative is to convert the filter into a generator by wrapping the right
+side of = in a list:
+
+    iex> languages = [elixir: :erlang, erlang: :prolog, prolog: nil]
+    iex> for {language, parent} <- languages, grandparent <- [languages[parent]], do: {language, grandparent}
+    [elixir: :prolog, erlang: nil, prolog: nil]
+
+## The `:into` and `:uniq` options
+
+In the examples above, the result returned by the comprehension was always a
+list. The returned result can be configured by passing an :into option, that
+accepts any structure as long as it implements the Collectable protocol.
+
+For example, we can use bitstring generators with the :into option to easily
+remove all spaces in a string:
+
+    iex> for <<c <- " hello world ">>, c != ?\s, into: "", do: <<c>>
+    "helloworld"
+
+The IO module provides streams, that are both Enumerable and Collectable, here
+is an upcase echo server using comprehensions:
+
+    for line <- IO.stream(), into: IO.stream() do
+      String.upcase(line)
+    end
+
+Similarly, uniq: true can also be given to comprehensions to guarantee the
+results are only added to the collection if they were not returned before. For
+example:
+
+    iex> for x <- [1, 1, 2, 3], uniq: true, do: x * 2
+    [2, 4, 6]
+    
+    iex> for <<x <- "abcabc">>, uniq: true, into: "", do: <<x - 32>>
+    "ABC"
+
+## The `:reduce` option
+
+While the :into option allows us to customize the comprehension behaviour to a
+given data type, such as putting all of the values inside a map or inside a
+binary, it is not always enough.
+
+For example, imagine that you have a binary with letters where you want to
+count how many times each lowercase letter happens, ignoring all uppercase
+ones. For instance, for the string "AbCabCABc", we want to return the map %{"a"
+=> 1, "b" => 2, "c" => 1}.
+
+If we were to use :into, we would need a data type that computes the frequency
+of each element it holds. While there is no such data type in Elixir, you could
+implement one yourself.
+
+A simpler option would be to use comprehensions for the mapping and filtering
+of letters, and then we invoke Enum.reduce/3 to build a map, for example:
+
+    iex> letters = for <<x <- "AbCabCABc">>, x in ?a..?z, do: <<x>>
+    iex> Enum.reduce(letters, %{}, fn x, acc -> Map.update(acc, x, 1, & &1 + 1) end)
+    %{"a" => 1, "b" => 2, "c" => 1}
+
+While the above is straight-forward, it has the downside of traversing the data
+at least twice. If you are expecting long strings as inputs, this can be quite
+expensive.
+
+Luckily, comprehensions also support the :reduce option, which would allow us
+to fuse both steps above into a single step:
+
+    iex> for <<x <- "AbCabCABc">>, x in ?a..?z, reduce: %{} do
+    ...>   acc -> Map.update(acc, <<x>>, 1, & &1 + 1)
+    ...> end
+    %{"a" => 1, "b" => 2, "c" => 1}
+
+When the :reduce key is given, its value is used as the initial accumulator and
+the do block must be changed to use -> clauses, where the left side of ->
+receives the accumulated value of the previous iteration and the expression on
+the right side must return the new accumulator value. Once there are no more
+elements, the final accumulated value is returned. If there are no elements at
+all, then the initial accumulator value is returned.
+
+```
+
+## Generators
+
+```elixir
+for x <- 1..100 do
+  x * 2
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52,
+ 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76, 78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100,
+ ...]
+```
+
+```elixir
+for x <- ~c"abcdefg" do
+  inspect(x)
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+["97", "98", "99", "100", "101", "102", "103"]
+```
+
+```elixir
+for x <- [one: 1, two: 2, three: 3] do
+  inspect(x)
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+["{:one, 1}", "{:two, 2}", "{:three, 3}"]
+```
+
+```elixir
+for <<x <- "abc">> do
+  inspect(x)
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+["97", "98", "99"]
+```
+
+```elixir
+for x <- 1..3, y <- 1..3, z <- 1..2, do: {x, y, z}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[
+  {1, 1, 1},
+  {1, 1, 2},
+  {1, 2, 1},
+  {1, 2, 2},
+  {1, 3, 1},
+  {1, 3, 2},
+  {2, 1, 1},
+  {2, 1, 2},
+  {2, 2, 1},
+  {2, 2, 2},
+  {2, 3, 1},
+  {2, 3, 2},
+  {3, 1, 1},
+  {3, 1, 2},
+  {3, 2, 1},
+  {3, 2, 2},
+  {3, 3, 1},
+  {3, 3, 2}
+]
+```
+
+```elixir
+slice_y = 3
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+3
+```
+
+```elixir
+for x <- 1..3, y <- 1..3, z <- 1..2, y == 3, x in [2, 3], do: {x, y, z}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[{2, 3, 1}, {2, 3, 2}, {3, 3, 1}, {3, 3, 2}]
+```
+
+```elixir
+for x <- 1..3, y <- 1..3, z <- 1..2, y == 3, do: {x, y, z}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[{1, 3, 1}, {1, 3, 2}, {2, 3, 1}, {2, 3, 2}, {3, 3, 1}, {3, 3, 2}]
+```
