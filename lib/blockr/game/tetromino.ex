@@ -8,12 +8,16 @@ defmodule Blockr.Game.Tetromino do
 
   alias Blockr.Game.{Group, Point}
 
-  def new(name \\ :i) do
-    %__MODULE__{name: name}
+  def new do
+    %__MODULE__{}
   end
 
-  def new_random() do
-    # new tetro with random color
+  def new_random(options) when is_list(options) do
+    __struct__(options)
+  end
+
+  def new(name) do
+    %__MODULE__{name: name}
   end
 
   def left(tetro) do
