@@ -1,0 +1,259 @@
+# Blockr Part 2: Board
+
+```elixir
+import IEx.Helpers
+alias Blockr.Game.{Board, Tetromino, Canvas}
+alias Blockr.Game
+```
+
+## Confirm Canvas
+
+```elixir
+Canvas.new([{0, 0}, {21, 11}])
+```
+
+```elixir
+# [for row <- 0..21 do
+#   [{row, 0}, {row, 11}]
+# end,
+# for col <- 1..10 do
+#   [{0, col}, {21, col}]
+# end]
+
+for row <- 0..21, col <- 0..11, row in [0, 21] or col in [0, 11] do
+  {row, col}
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[
+  {0, 0},
+  {0, 1},
+  {0, 2},
+  {0, 3},
+  {0, 4},
+  {0, 5},
+  {0, 6},
+  {0, 7},
+  {0, 8},
+  {0, 9},
+  {0, 10},
+  {0, 11},
+  {1, 0},
+  {1, 11},
+  {2, 0},
+  {2, 11},
+  {3, 0},
+  {3, 11},
+  {4, 0},
+  {4, 11},
+  {5, 0},
+  {5, 11},
+  {6, 0},
+  {6, 11},
+  {7, 0},
+  {7, 11},
+  {8, 0},
+  {8, 11},
+  {9, 0},
+  {9, 11},
+  {10, 0},
+  {10, 11},
+  {11, 0},
+  {11, 11},
+  {12, 0},
+  {12, 11},
+  {13, 0},
+  {13, 11},
+  {14, 0},
+  {14, 11},
+  {15, 0},
+  {15, 11},
+  {16, 0},
+  {16, 11},
+  {17, 0},
+  {17, 11},
+  {18, 0},
+  {18, 11},
+  {19, ...},
+  {...},
+  ...
+]
+```
+
+```elixir
+Board.new().walls
+|> Canvas.new()
+```
+
+## Show board
+
+```elixir
+game = Board.new()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%Blockr.Game.Board{
+  score: 0,
+  tetro: %Blockr.Game.Tetromino{name: :o, location: {0, 3}, rotation: 0, color: :green},
+  walls: [
+    {0, 0},
+    {0, 1},
+    {0, 2},
+    {0, 3},
+    {0, 4},
+    {0, 5},
+    {0, 6},
+    {0, 7},
+    {0, 8},
+    {0, 9},
+    {0, 10},
+    {0, 11},
+    {1, 0},
+    {1, 11},
+    {2, 0},
+    {2, 11},
+    {3, 0},
+    {3, 11},
+    {4, 0},
+    {4, 11},
+    {5, 0},
+    {5, 11},
+    {6, 0},
+    {6, 11},
+    {7, 0},
+    {7, 11},
+    {8, 0},
+    {8, 11},
+    {9, 0},
+    {9, 11},
+    {10, 0},
+    {10, 11},
+    {11, 0},
+    {11, 11},
+    {12, 0},
+    {12, 11},
+    {13, 0},
+    {13, 11},
+    {14, 0},
+    {14, 11},
+    {15, 0},
+    {15, 11},
+    {16, 0},
+    {16, 11},
+    {17, 0},
+    {17, ...},
+    {...},
+    ...
+  ],
+  points: MapSet.new([
+    {21, 5},
+    {0, 10},
+    {2, 11},
+    {7, 11},
+    {21, 9},
+    {13, 11},
+    {21, 7},
+    {0, 7},
+    {15, 11},
+    {20, 0},
+    {3, 11},
+    {16, 0},
+    {19, 11},
+    {15, 0},
+    {21, 3},
+    {0, 8},
+    {21, 11},
+    {11, 0},
+    {4, 0},
+    {0, 1},
+    {8, 0},
+    {3, 0},
+    {0, 4},
+    {6, 0},
+    {13, 0},
+    {1, 11},
+    {21, 4},
+    {0, 3},
+    {9, 11},
+    {21, 10},
+    {6, 11},
+    {2, 0},
+    {12, 11},
+    {17, 11},
+    {7, 0},
+    {16, 11},
+    {0, 6},
+    {21, 6},
+    {0, 5},
+    {0, 9},
+    {0, 11},
+    {0, 0},
+    {18, 11},
+    {8, 11},
+    {4, ...},
+    {...},
+    ...
+  ]),
+  junkyard: []
+}
+```
+
+```elixir
+game
+|> Game.left()
+|> Game.left()
+|> Game.left()
+|> Game.right()
+|> Game.fall()
+|> Board.show()
+|> Canvas.new()
+```
+
+```elixir
+Enum.reduce(1..17, game, fn _i, acc -> Game.fall(acc) end)
+|> Game.fall()
+|> Board.show()
+|> Canvas.new()
+```
+
+```elixir
+game2 =
+  Enum.reduce(1..50, game, fn _i, acc -> Game.fall(acc) end)
+  |> Board.show()
+  |> Canvas.new()
+```
+
+## Board With Data
+
+```elixir
+board = Board.new()
+
+points = for r <- 17..20, c <- 1..10, do: {r, c}
+colors = for r <- 17..20, c <- 1..10, do: {{r, c}, "green"}
+
+board = %{board | points: MapSet.new(points ++ board.walls), junkyard: colors}
+
+board
+|> Board.show()
+|> Canvas.new()
+```
+
+```elixir
+board.junkyard
+|> Map.new()
+|> Map.keys()
+|> Enum.group_by(fn {r, _c} -> r end)
+|> Map.values()
+|> Enum.count(fn list -> length(list) == 10 end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+4
+```
