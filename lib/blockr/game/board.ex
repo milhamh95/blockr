@@ -1,12 +1,13 @@
 defmodule Blockr.Game.Board do
   defstruct [
     score: 0,
-    tetro: nil, # you add this!
-    walls: [], # you build this! by writing a function
+    tetro: nil,
+    walls: [],
+    points: MapSet.new([]),
     junkyard: []
   ]
 
-  alias Blockr.Game.Tetromino
+  alias Blockr.Game.{Tetromino, Group}
 
   def new(opts \\ []) do
     __struct__(opts)
@@ -14,9 +15,9 @@ defmodule Blockr.Game.Board do
     |> add_walls()
   end
 
-  def initialize_tetro(board) do
+  defp initialize_tetro(board) do
     random_name =
-      [:s, :z, :l, :i, :o, :t]
+      [:s, :z, :l, :j, :i, :o, :t]
       |> Enum.random()
 
     %{board|tetro: Tetromino.new(name: random_name, location: {0, 3})}
@@ -25,19 +26,18 @@ defmodule Blockr.Game.Board do
   defp add_walls(board) do
     walls =
       for row <- 0..21, col <- 0..11,
-        (row in [0, 21]) or (col in [0,11])
-      do
+        (row in [0, 21]) or (col in [0, 11]) do
         {row, col}
       end
-
-      %{board | walls: walls}
+    %{board | walls: walls, points: MapSet.new(walls)}
   end
 
-  # random tetromino function:
-  # new constructor new tetromino, in the midle of the top of the page
+  def show(board) do
+    tetro =
+      board.tetro
+      |> Tetromino.to_group()
+      |> Group.paint(board.tetro.name)
 
-  # walls
-  # donut (around the playing surface)
-  # one point wide
-  # {0,0} -> {21, 11}
+    [tetro, board.walls, board.junkyard]
+  end
 end
