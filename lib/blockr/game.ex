@@ -32,7 +32,6 @@ defmodule Blockr.Game do
 
   end
 
-  @spec crash(any()) :: none()
   def crash(board) do
     board
     |> Board.detach()

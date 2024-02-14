@@ -41,12 +41,29 @@ defmodule Blockr.Game.Board do
     |> Enum.count(fn list -> length(list) == 10 end)
   end
 
+  def add_score(board) do
+    number_of_rows = count_complete_rows(board)
+
+    score =
+      cond do
+        number_of_rows == 0 ->
+          0
+        true ->
+          :math.pow(2, number_of_rows)
+          |> round()
+          |> Kernel.*(50)
+      end
+    %{board|score: score}
+
+  end
+
   def detach(board) do
     points = Tetromino.to_group(board.tetro)
     colors = Group.paint(points, board.tetro.name)
 
     mapset = Enum.reduce(points, board.points, &MapSet.put(&2, &1))
     %{board | points: mapset, junkyard: board.junkyard ++ colors}
+    |> add_score()
   end
 
   @spec show(
