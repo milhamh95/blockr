@@ -20,6 +20,10 @@ defmodule Blockr.Game do
     %{board | tetro: tetro}
   end
 
+  def fall(board) do
+
+  end
+
   defp attempt(board, tetro) do
     set =
       tetro
