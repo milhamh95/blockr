@@ -1,0 +1,324 @@
+# Stream
+
+## Section
+
+```elixir
+:functions
+|> Stream.__info__()
+|> Enum.each(fn {name, arity} ->
+  IO.puts("#{name}/#{arity}")
+end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+__struct__/0
+__struct__/1
+chunk/2
+chunk/3
+chunk/4
+chunk_by/2
+chunk_every/2
+chunk_every/3
+chunk_every/4
+chunk_while/4
+concat/1
+concat/2
+cycle/1
+dedup/1
+dedup_by/2
+drop/2
+drop_every/2
+drop_while/2
+duplicate/2
+each/2
+filter/2
+filter_map/3
+flat_map/2
+intersperse/2
+interval/1
+into/2
+into/3
+iterate/2
+map/2
+map_every/3
+reject/2
+repeatedly/1
+resource/3
+run/1
+scan/2
+scan/3
+take/2
+take_every/2
+take_while/2
+timer/1
+transform/3
+transform/4
+transform/5
+unfold/2
+uniq/1
+uniq/2
+uniq_by/2
+with_index/1
+with_index/2
+zip/1
+zip/2
+zip_with/2
+zip_with/3
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
+```
+
+## Generator (constructor)
+
+```elixir
+one_value = fn -> 1..2 |> Enum.random() end
+multiple_flips = Stream.repeatedly(one_value)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+#Function<51.53678557/2 in Stream.repeatedly/1>
+```
+
+```elixir
+multiple_flips |> Enum.take(4) |> Enum.map(& &1)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[1, 1, 2, 2]
+```
+
+```elixir
+[:head, :tail] |> Stream.cycle() |> Enum.take(10)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[:head, :tail, :head, :tail, :head, :tail, :head, :tail, :head, :tail]
+```
+
+```elixir
+count_stream = Stream.iterate(1, fn x -> x + 1 end) |> Stream.map(&IO.inspect/1)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+#Stream<[
+  enum: #Function<63.53678557/2 in Stream.unfold/2>,
+  funs: [#Function<48.53678557/1 in Stream.map/2>]
+]>
+```
+
+```elixir
+count_stream |> Enum.take(10)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+```
+
+```elixir
+count_stream |> Stream.drop(10) |> Enum.take(4)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[11, 12, 13, 14]
+```
+
+## Stream Transformations
+
+```elixir
+Stream.repeatedly(fn -> :random.uniform(8) end) |> Enum.take(20)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[4, 6, 8, 5, 3, 5, 8, 6, 4, 5, 2, 2, 6, 2, 5, 2, 4, 4, 1, 5]
+```
+
+```elixir
+random_groupings =
+  Stream.repeatedly(fn -> 8 end)
+  |> Stream.flat_map(fn x -> Enum.shuffle(1..x) end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+#Function<60.53678557/2 in Stream.transform/3>
+```
+
+```elixir
+random_groupings |> Enum.take(20)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[4, 7, 5, 6, 2, 1, 8, 3, 5, 4, 6, 1, 7, 2, 8, 3, 2, 4, 6, 8]
+```
+
+```elixir
+line_numbers = Stream.iterate(1, fn n -> n + 1 end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+#Function<63.53678557/2 in Stream.unfold/2>
+```
+
+```elixir
+Stream.zip(random_groupings, line_numbers) |> Enum.take(20)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[
+  {7, 1},
+  {8, 2},
+  {3, 3},
+  {6, 4},
+  {1, 5},
+  {2, 6},
+  {4, 7},
+  {5, 8},
+  {6, 9},
+  {5, 10},
+  {1, 11},
+  {8, 12},
+  {2, 13},
+  {3, 14},
+  {7, 15},
+  {4, 16},
+  {1, 17},
+  {2, 18},
+  {4, 19},
+  {3, 20}
+]
+```
+
+```elixir
+random_groupings |> Stream.with_index() |> Enum.take(20)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[
+  {1, 0},
+  {6, 1},
+  {4, 2},
+  {7, 3},
+  {5, 4},
+  {8, 5},
+  {2, 6},
+  {3, 7},
+  {2, 8},
+  {4, 9},
+  {8, 10},
+  {7, 11},
+  {1, 12},
+  {3, 13},
+  {6, 14},
+  {5, 15},
+  {3, 16},
+  {5, 17},
+  {8, 18},
+  {1, 19}
+]
+```
+
+```elixir
+striping = ~w(white grey)a |> Stream.cycle()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+#Function<63.53678557/2 in Stream.unfold/2>
+```
+
+```elixir
+Stream.zip(striping, Stream.with_index(random_groupings))
+|> Stream.map(fn {color, {n, i}} -> {i, n, color} end)
+|> Enum.take(20)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[
+  {0, 4, :white},
+  {1, 7, :grey},
+  {2, 6, :white},
+  {3, 5, :grey},
+  {4, 8, :white},
+  {5, 3, :grey},
+  {6, 2, :white},
+  {7, 1, :grey},
+  {8, 5, :white},
+  {9, 1, :grey},
+  {10, 6, :white},
+  {11, 7, :grey},
+  {12, 2, :white},
+  {13, 8, :grey},
+  {14, 4, :white},
+  {15, 3, :grey},
+  {16, 4, :white},
+  {17, 3, :grey},
+  {18, 7, :white},
+  {19, 8, :grey}
+]
+```
